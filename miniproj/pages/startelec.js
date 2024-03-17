@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 //const instance  = require("../election_creation")
 import instance from "../election_creation";
+import ballot from "../ballot"
 //const web3 = require('../web3');
 import web3 from "../web3";
 import { Form, Button, Input, Message } from "semantic-ui-react";
@@ -24,18 +25,23 @@ class StartElection extends Component {
             hour: 0
         });
 
+        
+
         try {
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          const { candidates, party, district, hour } = this.state;
+          console.log(candidates, party, district, hour);
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            
             console.log(accounts+" requests");
             await instance.methods
             .startelec(
-                this.state.candidates,
-                this.state.party,
-                [this.state.district], // Wrap district in an array
-                this.state.hour
+                [[candidates]],
+                [[party]],
+                [district], // Wrap district in an array
+                hour
               )
               .send({
-                from: accounts[0],
+                from: accounts[0]
               });
         }
         catch (error) {
@@ -91,6 +97,11 @@ class StartElection extends Component {
                
                 Submit
                 
+              </Button>
+              <Button>
+                <Link route = "/">
+                Back
+                </Link>
               </Button>
             </Form>
           </>

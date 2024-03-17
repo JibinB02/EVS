@@ -1,4 +1,4 @@
-import web3 from 'web3';
+import web3 from './web3';
 //const {Web3} = require('web3');
 import Ballot from './build/Ballot.json';
 //const Ballot = require('./build/Ballot.json')
@@ -7,6 +7,5 @@ import Ballot from './build/Ballot.json';
 const ballot = (address) => {
     return new web3.eth.Contract(Ballot.abi, address);
 }
-//console.log(ballot);
 
 export default ballot;

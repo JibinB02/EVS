@@ -65,12 +65,12 @@ function vote(uint index) public
     voters[msg.sender] = true;
     }
 
-function getCandidateName(uint index) public restricted view returns (string memory)
+function getCandidateName(uint index) public view returns (string memory)
 {
     require(block.timestamp>candidates[index].expirationDate);
     return candidates[index].name;
 }
-function getCandidateParty(uint index) public restricted view returns (string memory)
+function getCandidateParty(uint index) public view returns (string memory)
 {
     require(block.timestamp>candidates[index].expirationDate);
     return candidates[index].party;

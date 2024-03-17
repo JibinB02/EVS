@@ -2,6 +2,10 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { Web3 } = require("web3");
 const evs = require("./build/Electioncreation.json");
 
+// import HDWalletProvider from "@truffle/hdwallet-provider";
+// import {Web3} from "web3";
+// import evs from "./build/Electioncreation.json";
+
 const provider = new HDWalletProvider(
   "learn game trophy unknown surge one tenant speak dress excite erode pattern",
   // remember to change this to your own phrase!
