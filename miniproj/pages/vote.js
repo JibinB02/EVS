@@ -43,9 +43,7 @@ class Voting extends Component {
 
        
     }
-
-
-    handlevotecount = async (event) => {
+     handlevotecount = async (event) => {
         event.preventDefault()
         const electionAddresses1 = this.props.electionAddresses;
         console.log("console", electionAddresses1);
