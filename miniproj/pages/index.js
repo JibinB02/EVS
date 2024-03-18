@@ -17,7 +17,8 @@ import web3 from "../web3";
 class ElectionCreation extends Component {
     state = {
         electionAddresses: [],
-        candidateName: ''
+        candidateName: '',
+        candidateParty: ''
       };
   
     // static async getInitialProps() {
@@ -33,6 +34,7 @@ class ElectionCreation extends Component {
             
              const electionAddresses= await instance.methods.getsDeployedBallots().call();
             console.log("electionAddresses",electionAddresses)
+            this.setState({electionAddresses: electionAddresses});
             const ballotAddresses = [];
             for (const address of electionAddresses) {
                 const ballotAddress = await ballot(address);
@@ -46,7 +48,9 @@ class ElectionCreation extends Component {
                 // console.log("candidates", candidates);
                 const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
                 console.log("accounts",accounts);
-                      const candidateName = await ballotAddresses[3].methods.getCandidateName(0).call();
+                      const candidateName = await ballotAddresses[0].methods.getCandidateName(0).call();
+                      const candidateparty = await ballotAddresses[0].methods.getCandidateParty(0).call();
+                      this.setState({candidateParty: candidateparty})
                this.setState({candidateName: candidateName})
              }
             catch (errors){
@@ -64,9 +68,8 @@ class ElectionCreation extends Component {
     //}
 
     render() {
-        const { electionAddresses } = this.props;
-        const {candidateName} = this.state;
-        console.log(candidateName)
+        const {candidateName,candidateParty,electionAddresses} = this.state;
+        console.log(candidateName,candidateParty,electionAddresses)
 
         return (
             <div>
@@ -74,13 +77,19 @@ class ElectionCreation extends Component {
               <Form onSubmit={this.onSubmit}>
                 <Button primary>Get Candidate Name</Button>
               </Form>
-              {candidateName && (
+              
                 <Segment>
                   Candidate Name: {candidateName}
+                  Candidate Party: {candidateParty}
                 </Segment>
-              )}
+              
               <Button>
                 <Link route="startelec">Back</Link>
+              </Button>
+              <Button>
+              <Link route='vote'>
+               Vote
+               </Link>
               </Button>
             </div>
           );
