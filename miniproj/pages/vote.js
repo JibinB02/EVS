@@ -1,7 +1,5 @@
 import React , { Component} from 'react';
-import ElectionCreation from './index';
 import ballot from '../ballot';
-import instance from '../election_creation';
 import {Link} from "../routes";
 import { Router } from "../routes"; 
 
