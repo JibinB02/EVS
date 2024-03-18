@@ -12,13 +12,15 @@ import instance from "../election_creation";
 import ballot from "../ballot.js";
 import {Link} from "../routes";
 import web3 from "../web3";
+import { Router } from "../routes"; 
 
 
 class ElectionCreation extends Component {
     state = {
         electionAddresses: [],
         candidateName: '',
-        candidateParty: ''
+        candidateParty: '',
+        isCandidateNameLoaded: false
       };
   
     // static async getInitialProps() {
@@ -50,8 +52,13 @@ class ElectionCreation extends Component {
                 console.log("accounts",accounts);
                       const candidateName = await ballotAddresses[0].methods.getCandidateName(0).call();
                       const candidateparty = await ballotAddresses[0].methods.getCandidateParty(0).call();
-                      this.setState({candidateParty: candidateparty})
-               this.setState({candidateName: candidateName})
+                      const candidatess = await ballotAddresses[0].methods.candidates(0).call();
+                      //console.log("Candidatess",candidatess.expirationDate)
+                      this.setState({
+                        candidateName:candidateName,
+                        candidateParty:candidateparty,
+                        isCandidateNameLoaded: true, // Set the flag to true when the name is loaded
+                      });
              }
             catch (errors){
                 console.log("error",errors);
@@ -59,7 +66,14 @@ class ElectionCreation extends Component {
             }
 
             
+            
         }
+
+        handleVoteClick = () => {
+          const {electionAddresses} = this.state;
+          Router.pushRoute('vote', { electionAddresses });
+        };
+
    
         // console.log("ballot", ballotAddress.methods)
         // console.log("instance",instance.methods)
@@ -68,8 +82,8 @@ class ElectionCreation extends Component {
     //}
 
     render() {
-        const {candidateName,candidateParty,electionAddresses} = this.state;
-        console.log(candidateName,candidateParty,electionAddresses)
+        const {candidateName,candidateParty,electionAddresses,isCandidateNameLoaded} = this.state;
+        console.log(candidateName,candidateParty)
 
         return (
             <div>
@@ -78,19 +92,21 @@ class ElectionCreation extends Component {
                 <Button primary>Get Candidate Name</Button>
               </Form>
               
-                <Segment>
-                  Candidate Name: {candidateName}
-                  Candidate Party: {candidateParty}
-                </Segment>
+              {isCandidateNameLoaded && (
+          <Segment>
+            Candidate Name: {candidateName}
+            Candidate Party: {candidateParty}
+          </Segment>
+        )}
               
               <Button>
                 <Link route="startelec">Back</Link>
               </Button>
-              <Button>
-              <Link route='vote'>
-               Vote
-               </Link>
-              </Button>
+              {isCandidateNameLoaded && (
+          <Button onClick={this.handleVoteClick}>
+            Vote
+          </Button>
+        )}
             </div>
           );
         }
