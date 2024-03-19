@@ -5,14 +5,16 @@ import { Router } from "../routes";
 
 import {
     Form,
-    Button
+    Button,
+    Segment
 } from "semantic-ui-react"
 import web3 from '../web3';
 
 class Voting extends Component {
     state = {
         electionAddresses1: [],
-        ballots: null
+        ballots: null,
+        votecount: 0
       };
 
     static async getInitialProps({ query }) {
@@ -34,7 +36,7 @@ class Voting extends Component {
         this.setState({ electionAddresses1 })
         const ballots = await ballot(electionAddresses1)
         await ballots.methods.vote(0).send({
-            from:accounts[1],
+            from:accounts[0],
             gas:"1000000"
         })
 
@@ -56,7 +58,9 @@ class Voting extends Component {
             if (candidates.creationDate < candidates.expirationDate) {
                 const votecount = await ballots.methods.getVoteCount(0).call({
                     from: accounts[0]
-                });
+                })
+                const votecount1 = Number(votecount);
+                this.setState({votecount1:votecount1})
                 console.log("Vote Count: ", Number(votecount));
             } else {
                 console.log("Election period has expired.");
@@ -72,7 +76,8 @@ class Voting extends Component {
 
   
     render() {
-            
+            const {votecount1} = this.state;
+            console.log("madhu",votecount1)
 
         return (
             <div>
@@ -85,6 +90,9 @@ class Voting extends Component {
                 
                 <Button onClick={this.handlevotecount}>Get Vote Count</Button>
                 
+                <Segment>
+                    Vote Count: {votecount1}
+                </Segment>
                
                 <Link route="/">
                     <Button >

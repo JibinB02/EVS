@@ -6,6 +6,7 @@ import {
   Divider,
   Form,
   Grid,
+  Header,
   Segment,
 } from 'semantic-ui-react'
 import instance from "../election_creation";
@@ -13,6 +14,8 @@ import ballot from "../ballot.js";
 import {Link} from "../routes";
 import web3 from "../web3";
 import { Router } from "../routes"; 
+import 'semantic-ui-css/semantic.min.css';
+
 
 
 class ElectionCreation extends Component {
@@ -74,22 +77,16 @@ class ElectionCreation extends Component {
           Router.pushRoute('vote', { electionAddresses });
         };
 
-   
-        // console.log("ballot", ballotAddress.methods)
-        // console.log("instance",instance.methods)
-        
-        // return { electionAddresses };
-    //}
-
     render() {
         const {candidateName,candidateParty,electionAddresses,isCandidateNameLoaded} = this.state;
         console.log(candidateName,candidateParty)
 
         return (
             <div>
-              <h1>Election Addresses</h1>
-              <Form onSubmit={this.onSubmit}>
-                <Button primary>Get Candidate Name</Button>
+              <Header as="h1">Election Addresses</Header>
+              <Form class = "ui inverted form"onSubmit={this.onSubmit}>
+              <Button class="ui primary button">Get candidate name</Button>
+
               </Form>
               
               {isCandidateNameLoaded && (
