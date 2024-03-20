@@ -6,6 +6,7 @@ import ballot from "../ballot"
 import web3 from "../web3";
 import { Form, Button, Input, Message } from "semantic-ui-react";
 import {Link} from '../routes'
+import 'semantic-ui-css/semantic.min.css';
 
 
 class StartElection extends Component {

@@ -2,6 +2,8 @@ import React , { Component} from 'react';
 import ballot from '../ballot';
 import {Link} from "../routes";
 import { Router } from "../routes"; 
+import 'semantic-ui-css/semantic.min.css';
+
 
 import {
     Form,
@@ -14,13 +16,13 @@ class Voting extends Component {
     state = {
         electionAddresses1: [],
         ballots: null,
-        votecount: 0
+        votecount: 0,
       };
 
     static async getInitialProps({ query }) {
         console.log("query",query);
         const { electionAddresses } = query;
-        const firstAddress = electionAddresses.split('/')[0]
+        const firstAddress = electionAddresses.split('/')[1]
         return { electionAddresses: firstAddress };
       }
       
@@ -36,7 +38,7 @@ class Voting extends Component {
         this.setState({ electionAddresses1 })
         const ballots = await ballot(electionAddresses1)
         await ballots.methods.vote(0).send({
-            from:accounts[0],
+            from:accounts[2],
             gas:"1000000"
         })
 
@@ -70,6 +72,25 @@ class Voting extends Component {
         }
         
     };
+
+
+    voters = async(event)=> {
+        event.preventDefault();
+        const electionAddresses1 = this.props.electionAddresses;
+
+        try {
+            const accounts = await web3.eth.getAccounts();
+            console.log("accounts",accounts);
+            const ballots = await ballot(electionAddresses1);
+            const voters = await ballots.methods.voters(accounts[0]).call();
+            console.log("voters",voters)
+
+
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
     
 
     
@@ -77,7 +98,6 @@ class Voting extends Component {
   
     render() {
             const {votecount1} = this.state;
-            console.log("madhu",votecount1)
 
         return (
             <div>
@@ -89,6 +109,8 @@ class Voting extends Component {
                 </Form>
                 
                 <Button onClick={this.handlevotecount}>Get Vote Count</Button>
+
+                <Button onClick={this.voters}>Voters</Button>
                 
                 <Segment>
                     Vote Count: {votecount1}

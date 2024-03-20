@@ -23,7 +23,8 @@ class ElectionCreation extends Component {
         electionAddresses: [],
         candidateName: '',
         candidateParty: '',
-        isCandidateNameLoaded: false
+        isCandidateNameLoaded: false,
+        votingDistrict: ''
       };
   
     // static async getInitialProps() {
@@ -53,13 +54,13 @@ class ElectionCreation extends Component {
                 // console.log("candidates", candidates);
                 const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
                 console.log("accounts",accounts);
-                      const candidateName = await ballotAddresses[0].methods.getCandidateName(0).call();
-                      const candidateparty = await ballotAddresses[0].methods.getCandidateParty(0).call();
-                      const candidatess = await ballotAddresses[0].methods.candidates(0).call();
-                      //console.log("Candidatess",candidatess.expirationDate)
+                      const candidateName = await ballotAddresses[1].methods.getCandidateName(0).call();
+                      const candidateparty = await ballotAddresses[1].methods.getCandidateParty(0).call();
+                      const votingDistrict = await ballotAddresses[1].methods.votingDistrict().call();
                       this.setState({
                         candidateName:candidateName,
                         candidateParty:candidateparty,
+                        votingDistrict:votingDistrict,
                         isCandidateNameLoaded: true, // Set the flag to true when the name is loaded
                       });
              }
@@ -78,7 +79,7 @@ class ElectionCreation extends Component {
         };
 
     render() {
-        const {candidateName,candidateParty,electionAddresses,isCandidateNameLoaded} = this.state;
+        const {candidateName,candidateParty,votingDistrict,electionAddresses,isCandidateNameLoaded} = this.state;
         console.log(candidateName,candidateParty)
 
         return (
@@ -93,11 +94,12 @@ class ElectionCreation extends Component {
           <Segment>
             Candidate Name: {candidateName}
             Candidate Party: {candidateParty}
+            votingDistrict : {votingDistrict}
           </Segment>
         )}
               
               <Button>
-                <Link route="startelec">Back</Link>
+                <Link route="startelec">Start Election</Link>
               </Button>
               {isCandidateNameLoaded && (
           <Button onClick={this.handleVoteClick}>
