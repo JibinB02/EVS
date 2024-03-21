@@ -3,6 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/vote": "pages/vote.js",
-  "/startelec": "pages/startelec.js"
+  "/startelec": "pages/startelec.js",
+  "/vote": "pages/vote.js"
 }

@@ -8,11 +8,13 @@ import {
   Grid,
   Header,
   Segment,
+  Message,
+  SegmentGroup
 } from 'semantic-ui-react'
-import instance from "../election_creation";
-import ballot from "../ballot.js";
+import instance from "../ethereum/election_creation.js";
+import ballot from "../ethereum/ballot.js";
 import {Link} from "../routes";
-import web3 from "../web3";
+import web3 from "../ethereum/web3.js";
 import { Router } from "../routes"; 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -33,6 +35,8 @@ class ElectionCreation extends Component {
         //const electionAddresses = await instance.methods.getsDeployedBallots().call();
         
          //const manager = await ballotAddress.methods.manager().call();
+
+       
    
         onSubmit = async(event)=> 
         {
@@ -54,9 +58,9 @@ class ElectionCreation extends Component {
                 // console.log("candidates", candidates);
                 const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
                 console.log("accounts",accounts);
-                      const candidateName = await ballotAddresses[1].methods.getCandidateName(0).call();
-                      const candidateparty = await ballotAddresses[1].methods.getCandidateParty(0).call();
-                      const votingDistrict = await ballotAddresses[1].methods.votingDistrict().call();
+                      const candidateName = await ballotAddresses[0].methods.getCandidateName(0).call();
+                      const candidateparty = await ballotAddresses[0].methods.getCandidateParty(0).call();
+                      const votingDistrict = await ballotAddresses[0].methods.votingDistrict().call();
                       this.setState({
                         candidateName:candidateName,
                         candidateParty:candidateparty,
@@ -80,22 +84,38 @@ class ElectionCreation extends Component {
 
     render() {
         const {candidateName,candidateParty,votingDistrict,electionAddresses,isCandidateNameLoaded} = this.state;
-        console.log(candidateName,candidateParty)
+        console.log(candidateName,candidateParty,electionAddresses);
 
         return (
             <div>
               <Header as="h1">Election Addresses</Header>
-              <Form class = "ui inverted form"onSubmit={this.onSubmit}>
-              <Button class="ui primary button">Get candidate name</Button>
+              <Message>
+                <Message.Header>Election Addresses</Message.Header>
+                <Message.List>
+                  {electionAddresses.map((address, index) => (
+                    <Message.Item key={index}>{address}</Message.Item>
+                  ))}
+                </Message.List>
+              </Message>
+
+
+              <Form onSubmit={this.onSubmit}>
+              <Button primary>Get candidate name</Button>
 
               </Form>
               
               {isCandidateNameLoaded && (
-          <Segment>
-            Candidate Name: {candidateName}
-            Candidate Party: {candidateParty}
-            votingDistrict : {votingDistrict}
-          </Segment>
+            <SegmentGroup>
+                  <Segment>
+                      Candidate Name: {candidateName}
+                  </Segment>
+                  <Segment>
+                      Candidate Party: {candidateParty}
+                  </Segment>
+                  <Segment>
+                      votingDistrict : {votingDistrict}
+                  </Segment>
+            </SegmentGroup>
         )}
               
               <Button>

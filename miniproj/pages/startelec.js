@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 //const instance  = require("../election_creation")
-import instance from "../election_creation";
-import ballot from "../ballot"
+import instance from "../ethereum/election_creation";
+import ballot from "../ethereum/ballot"
 //const web3 = require('../web3');
-import web3 from "../web3";
+import web3 from "../ethereum/web3";
 import { Form, Button, Input, Message } from "semantic-ui-react";
 import {Link} from '../routes'
 import 'semantic-ui-css/semantic.min.css';

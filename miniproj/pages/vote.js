@@ -1,5 +1,5 @@
 import React , { Component} from 'react';
-import ballot from '../ballot';
+import ballot from '../ethereum/ballot';
 import {Link} from "../routes";
 import { Router } from "../routes"; 
 import 'semantic-ui-css/semantic.min.css';
@@ -8,15 +8,24 @@ import 'semantic-ui-css/semantic.min.css';
 import {
     Form,
     Button,
-    Segment
+    Segment,
+    Message,
+    SegmentGroup
 } from "semantic-ui-react"
-import web3 from '../web3';
+import web3 from '../ethereum/web3';
 
 class Voting extends Component {
     state = {
         electionAddresses1: [],
         ballots: null,
         votecount: 0,
+        errorMessage: "",
+        candidatename:"",
+        candidateparty:"",
+        votecount:0,
+        creationdate:"",
+        expirationdate:"",
+        isCandidateNameLoaded:false
       };
 
     static async getInitialProps({ query }) {
@@ -29,18 +38,27 @@ class Voting extends Component {
     
 
     onSubmit = async(event) => {
+
+        
         
         event.preventDefault();
-        const accounts = await web3.eth.getAccounts();
-        console.log(accounts);
         const electionAddresses1 = this.props.electionAddresses
         console.log("election",electionAddresses1);
+
+        try {
+        const accounts = await web3.eth.getAccounts();
+        console.log(accounts);
+       
         this.setState({ electionAddresses1 })
         const ballots = await ballot(electionAddresses1)
         await ballots.methods.vote(0).send({
-            from:accounts[2],
+            from:accounts[1],
             gas:"1000000"
         })
+    }
+    catch(error) {
+        this.setState({ errorMessage: error.message });
+    }
 
 
        
@@ -82,12 +100,38 @@ class Voting extends Component {
             const accounts = await web3.eth.getAccounts();
             console.log("accounts",accounts);
             const ballots = await ballot(electionAddresses1);
-            const voters = await ballots.methods.voters(accounts[0]).call();
+            const voters = await ballots.methods.voters(accounts[1]).call();
             console.log("voters",voters)
 
 
         }
         catch(error) {
+            console.log(error)
+        }
+    }
+
+
+    Details = async(event) => {
+        event.preventDefault();
+        const electionAddresses1 = this.props.electionAddresses;
+
+        try {
+            const accounts = await web3.eth.getAccounts();
+            console.log("accounts",accounts);
+            const ballots = await ballot(electionAddresses1);
+            const candidates = await ballots.methods.candidates(0).call();
+           this.setState({
+            candidatename:candidates.name,
+            candidateparty:candidates.party,
+            votecount:Number(candidates.voteCount),
+            creationdate:Number(candidates.creationDate),
+            expirationdate:Number(candidates.expirationDate),
+            isCandidateNameLoaded:true
+
+           })
+
+        }
+        catch (error) {
             console.log(error)
         }
     }
@@ -97,7 +141,7 @@ class Voting extends Component {
 
   
     render() {
-            const {votecount1} = this.state;
+            const {votecount1,candidatename,candidateparty,votecount,creationdate,expirationdate,isCandidateNameLoaded} = this.state;
 
         return (
             <div>
@@ -115,12 +159,28 @@ class Voting extends Component {
                 <Segment>
                     Vote Count: {votecount1}
                 </Segment>
+
+                <Button onClick={this.Details}>Get Candidate Details</Button>
+
+
+                {isCandidateNameLoaded && (
+
+                <SegmentGroup>
+                    <Segment>Candidate Name : {candidatename}</Segment>
+                    <Segment>Candidate Party : {candidateparty}</Segment>
+                    <Segment>Vote Count : {votecount}</Segment>
+                    <Segment>Creation Date : {creationdate}</Segment>
+                    <Segment>Expiration Date : {expirationdate}</Segment>
+                </SegmentGroup>
+                )}
                
                 <Link route="/">
                     <Button >
                         Back
                     </Button>
                 </Link>
+
+               <Message content={this.state.errorMessage}/>
                
                 
             </div>
