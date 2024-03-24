@@ -1,6 +1,6 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { Web3 } = require("web3");
-const evs = require("../build/Electioncreation.json");
+const evs = require("../ethereum/build/Electioncreation.json");
 
 // import HDWalletProvider from "@truffle/hdwallet-provider";
 // import {Web3} from "web3";

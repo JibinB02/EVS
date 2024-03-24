@@ -1,4 +1,5 @@
 import React , {Component} from 'react'
+import { useEffect,useState } from 'react';
 import {
   GridColumn,
   FormInput,
@@ -17,6 +18,8 @@ import {Link} from "../routes";
 import web3 from "../ethereum/web3.js";
 import { Router } from "../routes"; 
 import 'semantic-ui-css/semantic.min.css';
+import supabase from "../supabaseClient.js"
+import Supabase from './fetch.js';
 
 
 
@@ -28,7 +31,8 @@ class ElectionCreation extends Component {
         isCandidateNameLoaded: false,
         votingDistrict: ''
       };
-  
+
+      
     // static async getInitialProps() {
         
         //console.log("accountsss",accounts)
@@ -41,7 +45,7 @@ class ElectionCreation extends Component {
         onSubmit = async(event)=> 
         {
             event.preventDefault();
-            
+            console.log("Supabase",supabase)
              const electionAddresses= await instance.methods.getsDeployedBallots().call();
             console.log("electionAddresses",electionAddresses)
             this.setState({electionAddresses: electionAddresses});
@@ -82,12 +86,17 @@ class ElectionCreation extends Component {
           Router.pushRoute('vote', { electionAddresses });
         };
 
+
+        
+
     render() {
         const {candidateName,candidateParty,votingDistrict,electionAddresses,isCandidateNameLoaded} = this.state;
         console.log(candidateName,candidateParty,electionAddresses);
+        
 
         return (
             <div>
+             
               <Header as="h1">Election Addresses</Header>
               <Message>
                 <Message.Header>Election Addresses</Message.Header>
@@ -126,6 +135,10 @@ class ElectionCreation extends Component {
             Vote
           </Button>
         )}
+
+     <Supabase/>
+
+  
             </div>
           );
         }

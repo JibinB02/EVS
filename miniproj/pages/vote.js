@@ -52,7 +52,7 @@ class Voting extends Component {
         this.setState({ electionAddresses1 })
         const ballots = await ballot(electionAddresses1)
         await ballots.methods.vote(0).send({
-            from:accounts[1],
+            from:accounts[2],
             gas:"1000000"
         })
     }
